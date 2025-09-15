@@ -8,36 +8,46 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
+      # 2. Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      # 3. Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t wisecow:latest .
+
+      # 4. Set up Kind cluster
+      - name: Set up Kind cluster
+        uses: engineerd/setup-kind@v0.6.0
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          version: v0.21.0
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/wisecow-image:${{ github.sha }}
+      # 5. Load Docker image into Kind cluster
+      - name: Load image into Kind
+        run: kind load docker-image wisecow:latest
 
+      # 6. Install kubectl
       - name: Set up kubectl
-        uses: azure/setup-kubectl@v1
+        uses: azure/setup-kubectl@v3
         with:
           version: 'v1.23.0'
 
-      - name: Configure Kubernetes credentials
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Deploy to Kubernetes
+      # 7. Deploy Wisecow application
+      - name: Deploy Wisecow
         run: |
           kubectl apply -f kubernetes/deployment.yaml
           kubectl apply -f kubernetes/service.yaml
           kubectl rollout status deployment/wisecow-deployment
+
+      # 8. Test if service is running (optional)
+      - name: Check Wisecow service
+        run: |
+          kubectl get pods -o wide
+          kubectl get svc
