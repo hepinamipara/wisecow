@@ -8,7 +8,7 @@ name: CI/CD Pipeline for Wisecow App
 on:
   workflow_dispatch:
 
-jobs:
+jobs: 
   build-and-deploy:
     runs-on: ubuntu-latest
 
