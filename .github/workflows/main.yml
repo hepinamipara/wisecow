@@ -33,13 +33,13 @@ jobs:
         with:
           version: 'v1.23.0'
         
-      - name: Install gke-gcloud-auth-plugin
-        run: |
-          sudo apt-get update
-          sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+      # - name: Install gke-gcloud-auth-plugin
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
        
       - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
