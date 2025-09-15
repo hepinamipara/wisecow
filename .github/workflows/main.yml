@@ -25,9 +25,10 @@ jobs:
 
       # 4. Set up Kind cluster
       - name: Set up Kind cluster
-        uses: engineerd/setup-kind@v0.6.0
+        uses: engineerd/setup-kind@v0.11.1
         with:
           version: v0.21.0
+          install-kind: true
 
       # 5. Load Docker image into Kind cluster
       - name: Load image into Kind
