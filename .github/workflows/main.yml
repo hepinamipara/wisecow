@@ -39,7 +39,7 @@ jobs:
       #     sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
        
       - name: Authenticate with GCP
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
