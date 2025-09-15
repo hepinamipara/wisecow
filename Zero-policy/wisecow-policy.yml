@@ -1,0 +1,29 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: wisecow-zero-trust
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: wisecow
+  process:
+    matchPaths:
+      # Allow only the wisecow.sh script to run
+      - path: /app/wisecow.sh
+        action: Allow
+    defaultAction: Block   # Block all other process executions
+  file:
+    matchPaths:
+      # Allow read/write to /app
+      - path: /app
+        action: Allow
+    defaultAction: Block   # Block all other file access
+  network:
+    matchPaths:
+      # Allow outbound HTTP to port 4499 (Wisecow service)
+      - protocol: TCP
+        port: 4499
+        direction: Out
+        action: Allow
+    defaultAction: Block   # Block all other network connections
