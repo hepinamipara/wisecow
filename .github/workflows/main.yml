@@ -37,7 +37,7 @@ jobs:
       #   run: |
       #     sudo apt-get update
       #     sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
-      
+
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v2
         with:
@@ -47,8 +47,8 @@ jobs:
         uses: google-github-actions/get-gke-credentials@v2
         with:
           cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
-          location: ${{ secrets.GKE_ZONE }}  # Explicitly using the GKE_ZONE secret for location
-          project_id: ${{ secrets.GKE_PROJECT }}
+          location: ${{ secrets.GKE_CLUSTER_ZONE }}  # Explicitly using the GKE_ZONE secret for location
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Deploy Wisecow application
         run: |
