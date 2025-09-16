@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: wisecow-service
 spec:
-  type: ClusterIp
+  type: ClusterIP
   selector:
     app: wisecow
   ports:
