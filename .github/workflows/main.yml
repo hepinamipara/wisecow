@@ -3,12 +3,12 @@ name: CI/CD Pipeline for Wisecow App
 # on:
 #   push:
 #     branches:
-#       - main 
+#       - main
 
 on:
   workflow_dispatch:
 
-jobs: 
+jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
@@ -34,8 +34,8 @@ jobs:
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
-          version: 'v1.23.0'
-        
+          version: "v1.23.0"
+
       # - name: Install gke-gcloud-auth-plugin
       #   run: |
       #     sudo apt-get update
@@ -50,9 +50,12 @@ jobs:
         uses: google-github-actions/get-gke-credentials@v2
         with:
           cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
-          location: ${{ secrets.GKE_CLUSTER_ZONE }} 
+          location: ${{ secrets.GKE_CLUSTER_ZONE }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Deploy Wisecow application
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.1/deploy/static/provider/cloud/deploy.yaml
       - name: Deploy Wisecow application
         run: |
           kubectl apply -f kubernetes/deployment.yml
